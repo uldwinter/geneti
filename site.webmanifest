@@ -1,0 +1,17 @@
+{
+  "name": "MarginPilot — юнит-экономика маркетплейсов",
+  "short_name": "MarginPilot",
+  "description": "Калькулятор прибыли, ROI и точки безубыточности для продавцов на маркетплейсах.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070b16",
+  "theme_color": "#0b1020",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
