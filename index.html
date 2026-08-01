@@ -3,111 +3,257 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0b1020" />
-  <meta name="application-name" content="MarginPilot" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta property="og:title" content="MarginPilot — прибыль товара до закупки" />
-  <meta property="og:description" content="Юнит-экономика Wildberries, Ozon и Яндекс Маркета без Excel." />
-  <meta name="description" content="MarginPilot — калькулятор юнит-экономики для продавцов на маркетплейсах." />
-  <meta name="telderi" content="e5ae140a4b395a1dd631ba99de22de7a" />
-  <title>MarginPilot — юнит-экономика маркетплейсов</title>
+  <meta name="theme-color" content="#0a0d12" />
+  <meta name="description" content="CircuPass — конструктор цифровых паспортов продукции для подготовки к EU Digital Product Passport." />
+  <meta property="og:title" content="CircuPass — Digital Product Passport Workspace" />
+  <meta property="og:description" content="Реестр товаров, материалы, цепочка поставок, доказательства, публичный паспорт и QR-код." />
+  <title>CircuPass — Digital Product Passport Workspace</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-  <link rel="mask-icon" href="./favicon.svg" color="#baff64" />
-  <link rel="manifest" href="./site.webmanifest" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#"><img class="logo-image" src="./favicon.svg" alt=""><span>MarginPilot</span><em>SELLER</em></a>
-    <div class="header-actions">
-      <button class="button ghost" id="shareButton">Поделиться расчётом</button>
-      <button class="button primary" id="saveButton">Сохранить товар</button>
-    </div>
-  </header>
+  <div id="publicMode" class="public-mode hidden"></div>
 
-  <main>
-    <section class="hero">
-      <div>
-        <span class="eyebrow">Юнит-экономика без Excel</span>
-        <h1>Поймите прибыль<br>до закупки товара.</h1>
-        <p>Учтите комиссию, логистику, рекламу, налоги и возвраты. MarginPilot покажет чистую прибыль, ROI, точку безубыточности и рекомендуемую цену.</p>
-        <div class="chips"><span>Wildberries</span><span>Ozon</span><span>Яндекс Маркет</span><span>Без API-ключей</span></div>
-      </div>
-      <div class="hero-result">
-        <span>Чистая прибыль с продажи</span>
-        <strong id="heroProfit">0 ₽</strong>
-        <small id="heroStatus">Заполните параметры товара</small>
-      </div>
-    </section>
+  <div id="appShell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="CircuPass">
+        <img src="./favicon.svg" alt="" />
+        <span>CircuPass</span>
+        <em>DPP READY</em>
+      </a>
+      <nav class="top-actions">
+        <button class="button ghost" id="loadDemo">Загрузить демо</button>
+        <button class="button ghost" id="exportPackage">Экспорт пакета</button>
+        <button class="button primary" id="publishPassport">Публичный паспорт</button>
+      </nav>
+    </header>
 
-    <section class="layout">
-      <div class="calculator panel">
-        <div class="panel-title">
-          <div><span>01</span><h2>Параметры товара</h2></div>
-          <button class="text-button" id="resetButton">Сбросить</button>
+    <main>
+      <section class="hero">
+        <div>
+          <span class="eyebrow">Digital Product Passport Workspace</span>
+          <h1>Подготовьте продукт<br />к прозрачному рынку ЕС.</h1>
+          <p>Соберите идентичность товара, материалы, поставщиков, документы и данные жизненного цикла. CircuPass покажет пробелы, сформирует публичный паспорт и QR-код.</p>
+          <div class="chips">
+            <span>Модель / партия / единица</span>
+            <span>Data quality score</span>
+            <span>QR + public page</span>
+            <span>JSON / CSV / PDF</span>
+            <span>White label</span>
+          </div>
         </div>
+        <aside class="hero-card">
+          <span>Готовность выбранного паспорта</span>
+          <strong id="heroScore">0%</strong>
+          <small id="heroVerdict">Добавьте продукт или загрузите демо</small>
+        </aside>
+      </section>
 
-        <div class="grid two">
-          <label>Название товара<input id="productName" value="Беспроводные наушники"></label>
-          <label>Маркетплейс<select id="marketplace"><option value="wb">Wildberries</option><option value="ozon">Ozon</option><option value="ym">Яндекс Маркет</option></select></label>
-          <label>Цена продажи, ₽<input id="salePrice" type="number" min="0" value="2490"></label>
-          <label>Себестоимость, ₽<input id="costPrice" type="number" min="0" value="890"></label>
-        </div>
+      <section class="workspace">
+        <aside class="sidebar panel">
+          <div class="sidebar-head">
+            <div><span class="step">01</span><h2>Реестр продуктов</h2></div>
+            <button class="icon-button" id="newProduct" title="Новый продукт">+</button>
+          </div>
+          <label class="search-field"><span>Поиск</span><input id="productSearch" placeholder="Название, SKU, бренд" /></label>
+          <div class="filter-row">
+            <select id="categoryFilter" aria-label="Категория">
+              <option value="all">Все категории</option>
+              <option value="battery">Батареи</option>
+              <option value="textile">Текстиль</option>
+              <option value="construction">Стройматериалы</option>
+              <option value="electronics">Электроника</option>
+              <option value="other">Другое</option>
+            </select>
+          </div>
+          <div id="productList" class="product-list"></div>
+          <div class="sidebar-footer">
+            <button class="button ghost wide" id="duplicateProduct">Дублировать</button>
+            <button class="button danger wide" id="deleteProduct">Удалить</button>
+          </div>
+        </aside>
 
-        <div class="section-label"><span>02</span><h2>Расходы маркетплейса</h2></div>
-        <div class="grid three">
-          <label>Комиссия, %<input id="commissionPct" type="number" min="0" max="100" step="0.1"></label>
-          <label>Логистика, ₽<input id="logistics" type="number" min="0"></label>
-          <label>Хранение, ₽<input id="storage" type="number" min="0"></label>
-          <label>Фулфилмент, ₽<input id="fulfillment" type="number" min="0"></label>
-          <label>Упаковка, ₽<input id="packaging" type="number" min="0"></label>
-          <label>Эквайринг, %<input id="acquiringPct" type="number" min="0" max="100" step="0.1"></label>
-        </div>
+        <section class="content">
+          <div class="overview panel">
+            <div class="overview-main">
+              <div class="overview-title">
+                <span id="activeCategory" class="eyebrow">Нет продукта</span>
+                <h2 id="activeName">Создайте первый паспорт</h2>
+                <p id="activeIdentifier">—</p>
+              </div>
+              <div id="statusBadge" class="status-badge status-draft">Черновик</div>
+            </div>
+            <div class="metrics-grid">
+              <article><span>Полнота данных</span><strong id="completenessValue">0%</strong><div class="progress"><i id="completenessBar"></i></div></article>
+              <article><span>Подтверждено</span><strong id="evidenceValue">0%</strong><div class="progress"><i id="evidenceBar"></i></div></article>
+              <article><span>Материалов</span><strong id="materialsCount">0</strong></article>
+              <article><span>Поставщиков</span><strong id="suppliersCount">0</strong></article>
+              <article><span>Документов</span><strong id="documentsCount">0</strong></article>
+            </div>
+          </div>
 
-        <div class="section-label"><span>03</span><h2>Продвижение и налоги</h2></div>
-        <div class="grid three">
-          <label>Реклама / ДРР, %<input id="adsPct" type="number" min="0" max="100" step="0.1" value="8"></label>
-          <label>Налог, %<input id="taxPct" type="number" min="0" max="100" step="0.1" value="6"></label>
-          <label>Возвраты, %<input id="returnsPct" type="number" min="0" max="95" step="0.1" value="10"></label>
-          <label>Прочие расходы, ₽<input id="otherCosts" type="number" min="0" value="50"></label>
-          <label>Целевая маржа, %<input id="targetMargin" type="number" min="0" max="90" value="25"></label>
-          <label>Продаж в месяц<input id="monthlySales" type="number" min="0" value="100"></label>
-        </div>
-        <p class="hint">Тарифы подставляются как стартовый пресет. Их можно изменить вручную, поскольку комиссии и логистика зависят от категории, схемы работы и даты.</p>
-      </div>
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="identity">Идентичность</button>
+            <button class="tab" data-tab="materials">Материалы</button>
+            <button class="tab" data-tab="supply">Поставщики</button>
+            <button class="tab" data-tab="lifecycle">Жизненный цикл</button>
+            <button class="tab" data-tab="documents">Документы</button>
+            <button class="tab" data-tab="readiness">Готовность</button>
+            <button class="tab" data-tab="passport">Публичная карточка</button>
+            <button class="tab" data-tab="settings">Брендинг</button>
+          </div>
 
-      <aside class="results panel">
-        <div class="panel-title"><div><span>04</span><h2>Результат</h2></div><span class="live">LIVE</span></div>
-        <div class="score" id="scoreCard"><span>Чистая прибыль</span><strong id="profit">0 ₽</strong><small id="profitNote"></small></div>
-        <div class="metrics">
-          <div><span>Маржинальность</span><strong id="margin">0%</strong></div>
-          <div><span>ROI</span><strong id="roi">0%</strong></div>
-          <div><span>Безубыточная цена</span><strong id="breakEven">0 ₽</strong></div>
-          <div><span>Цена для цели</span><strong id="targetPrice">0 ₽</strong></div>
-          <div><span>Прибыль в месяц</span><strong id="monthlyProfit">0 ₽</strong></div>
-          <div><span>Расходы от выручки</span><strong id="costShare">0%</strong></div>
-        </div>
-        <div class="costs"><h3>Структура расходов</h3><div id="costRows"></div></div>
-        <button class="button wide" id="printButton">Сохранить отчёт в PDF</button>
-      </aside>
-    </section>
+          <section id="tab-identity" class="tab-panel active">
+            <div class="panel section">
+              <div class="panel-head"><div><span class="step">02</span><h2>Идентичность продукта</h2></div><span class="autosave">Автосохранение</span></div>
+              <div class="form-grid three">
+                <label>Название продукта<input id="name" data-field="name" /></label>
+                <label>Бренд<input id="brand" data-field="brand" /></label>
+                <label>Модель / артикул<input id="model" data-field="model" /></label>
+                <label>Уникальный идентификатор<input id="identifier" data-field="identifier" placeholder="GTIN / SKU / UUID" /></label>
+                <label>Уровень паспорта<select id="passportLevel" data-field="passportLevel"><option value="model">Модель</option><option value="batch">Партия</option><option value="item">Единица</option></select></label>
+                <label>Категория<select id="category" data-field="category"><option value="battery">Батареи</option><option value="textile">Текстиль</option><option value="construction">Стройматериалы</option><option value="electronics">Электроника</option><option value="other">Другое</option></select></label>
+                <label>Статус<select id="status" data-field="status"><option value="draft">Черновик</option><option value="review">На проверке</option><option value="ready">Готов к публикации</option><option value="published">Опубликован</option></select></label>
+                <label>Дата выпуска<input id="manufactureDate" data-field="manufactureDate" type="date" /></label>
+                <label>Страна производства<input id="manufactureCountry" data-field="manufactureCountry" /></label>
+                <label>Производитель<input id="manufacturer" data-field="manufacturer" /></label>
+                <label>Импортёр / оператор ЕС<input id="economicOperator" data-field="economicOperator" /></label>
+                <label>Контакт оператора<input id="operatorContact" data-field="operatorContact" /></label>
+              </div>
+              <label>Описание продукта<textarea id="description" data-field="description" rows="4"></textarea></label>
+              <label>Назначение и область применения<textarea id="intendedUse" data-field="intendedUse" rows="3"></textarea></label>
+            </div>
+          </section>
 
-    <section class="compare panel">
-      <div class="panel-title"><div><span>05</span><h2>Сравнение площадок</h2></div><small>На одинаковой цене и себестоимости</small></div>
-      <div class="compare-grid" id="compareGrid"></div>
-    </section>
+          <section id="tab-materials" class="tab-panel">
+            <div class="panel section">
+              <div class="panel-head"><div><span class="step">03</span><h2>Состав и материалы</h2></div><button class="text-button" id="addMaterial">+ Добавить материал</button></div>
+              <div class="table-head material-grid"><span>Материал</span><span>Доля, %</span><span>Переработанное, %</span><span>Происхождение</span><span>Риск</span><span></span></div>
+              <div id="materialsList" class="dynamic-list"></div>
+              <div class="section-note">Сумма долей: <strong id="materialTotal">0%</strong>. Для публичного паспорта рекомендуется объяснять неизвестные и приблизительные значения.</div>
+            </div>
+          </section>
 
-    <section class="saved panel">
-      <div class="panel-title"><div><span>06</span><h2>Сохранённые товары</h2></div><button class="text-button" id="exportButton">Экспорт CSV</button></div>
-      <div class="empty" id="emptyState">Сохраните первый расчёт — он появится здесь.</div>
-      <div class="table-wrap"><table id="savedTable"><thead><tr><th>Товар</th><th>Площадка</th><th>Цена</th><th>Прибыль</th><th>Маржа</th><th>ROI</th><th></th></tr></thead><tbody id="savedBody"></tbody></table></div>
-    </section>
-  </main>
+          <section id="tab-supply" class="tab-panel">
+            <div class="panel section">
+              <div class="panel-head"><div><span class="step">04</span><h2>Цепочка поставок</h2></div><button class="text-button" id="addSupplier">+ Добавить поставщика</button></div>
+              <div class="table-head supplier-grid"><span>Компания</span><span>Страна</span><span>Уровень</span><span>Компонент</span><span>Доказательства</span><span></span></div>
+              <div id="suppliersList" class="dynamic-list"></div>
+            </div>
+          </section>
 
-  <footer><span>MarginPilot MVP · расчёты ориентировочные</span><span>Данные хранятся только в браузере</span></footer>
+          <section id="tab-lifecycle" class="tab-panel">
+            <div class="panel section">
+              <div class="panel-head"><div><span class="step">05</span><h2>Экологические и эксплуатационные данные</h2></div></div>
+              <div class="form-grid three">
+                <label>Углеродный след, кг CO₂e<input id="carbonFootprint" data-field="carbonFootprint" type="number" min="0" step="0.01" /></label>
+                <label>Энергопотребление, кВт·ч<input id="energyUse" data-field="energyUse" type="number" min="0" step="0.01" /></label>
+                <label>Водный след, л<input id="waterUse" data-field="waterUse" type="number" min="0" step="0.01" /></label>
+                <label>Гарантия, месяцев<input id="warrantyMonths" data-field="warrantyMonths" type="number" min="0" /></label>
+                <label>Запчасти доступны, лет<input id="sparePartsYears" data-field="sparePartsYears" type="number" min="0" /></label>
+                <label>Ремонтопригодность, 0–10<input id="repairScore" data-field="repairScore" type="number" min="0" max="10" step="0.1" /></label>
+                <label>Расчётный срок службы, лет<input id="expectedLifeYears" data-field="expectedLifeYears" type="number" min="0" step="0.1" /></label>
+                <label>Перерабатываемая доля, %<input id="recyclablePct" data-field="recyclablePct" type="number" min="0" max="100" /></label>
+                <label>Повторно используемая доля, %<input id="reusablePct" data-field="reusablePct" type="number" min="0" max="100" /></label>
+              </div>
+              <label>Инструкции по ремонту и разборке<textarea id="repairInstructions" data-field="repairInstructions" rows="4"></textarea></label>
+              <label>Инструкции по переработке / утилизации<textarea id="recyclingInstructions" data-field="recyclingInstructions" rows="4"></textarea></label>
+              <label>Программа возврата или обратного сбора<textarea id="takeBackProgram" data-field="takeBackProgram" rows="3"></textarea></label>
+            </div>
+          </section>
+
+          <section id="tab-documents" class="tab-panel">
+            <div class="panel section">
+              <div class="panel-head"><div><span class="step">06</span><h2>Документы и доказательства</h2></div><button class="text-button" id="addDocument">+ Добавить документ</button></div>
+              <div class="table-head document-grid"><span>Документ</span><span>Тип</span><span>Номер / URL</span><span>Дата</span><span>Проверен</span><span></span></div>
+              <div id="documentsList" class="dynamic-list"></div>
+            </div>
+          </section>
+
+          <section id="tab-readiness" class="tab-panel">
+            <div class="readiness-layout">
+              <section class="panel section">
+                <div class="panel-head"><div><span class="step">07</span><h2>Пробелы и приоритеты</h2></div><button class="button ghost compact" id="exportTasks">CSV задач</button></div>
+                <div id="issuesList" class="issues"></div>
+              </section>
+              <aside class="panel section timeline-card">
+                <span class="eyebrow">Отраслевой профиль</span>
+                <h3 id="timelineTitle">Общий DPP readiness</h3>
+                <p id="timelineText"></p>
+                <div class="timeline" id="timeline"></div>
+                <div class="legal-note">Это инструмент подготовки данных. Он не регистрирует паспорт в реестре ЕС и не подтверждает юридическое соответствие конкретному отраслевому акту.</div>
+              </aside>
+            </div>
+          </section>
+
+          <section id="tab-passport" class="tab-panel">
+            <div class="passport-layout">
+              <section class="panel section">
+                <div class="panel-head"><div><span class="step">08</span><h2>Публикация</h2></div></div>
+                <label>Публичный заголовок<input id="publicTitle" data-field="publicTitle" /></label>
+                <label>Краткое сообщение бренда<textarea id="publicMessage" data-field="publicMessage" rows="3"></textarea></label>
+                <div class="visibility-grid">
+                  <label><input type="checkbox" data-public="materials" checked /> Материалы</label>
+                  <label><input type="checkbox" data-public="suppliers" checked /> Поставщики</label>
+                  <label><input type="checkbox" data-public="environment" checked /> Экологические данные</label>
+                  <label><input type="checkbox" data-public="documents" checked /> Документы</label>
+                  <label><input type="checkbox" data-public="repair" checked /> Ремонт и утилизация</label>
+                </div>
+                <div class="publish-actions">
+                  <button class="button primary" id="copyPublicLink">Скопировать ссылку</button>
+                  <button class="button ghost" id="openPublicLink">Открыть карточку</button>
+                  <button class="button ghost" id="printPassport">PDF / печать</button>
+                </div>
+                <p class="muted">Публичная ссылка содержит выбранные данные внутри URL. Для промышленной версии их следует хранить в базе и регистрировать уникальный идентификатор через официальную инфраструктуру.</p>
+              </section>
+              <aside class="panel passport-preview">
+                <div id="passportPreview"></div>
+                <div class="qr-box"><img id="qrImage" alt="QR-код публичного паспорта" /><small>Сканируйте, чтобы открыть публичную карточку</small></div>
+              </aside>
+            </div>
+          </section>
+
+          <section id="tab-settings" class="tab-panel">
+            <div class="settings-layout">
+              <section class="panel section">
+                <div class="panel-head"><div><span class="step">W</span><h2>White-label настройки</h2></div></div>
+                <label>Название решения<input id="workspaceName" /></label>
+                <label>Название компании<input id="companyName" /></label>
+                <label>Контакт<input id="companyContact" /></label>
+                <label>Акцентный цвет<input id="accentColor" type="color" /></label>
+                <label>Подпись в публичном паспорте<textarea id="footerText" rows="3"></textarea></label>
+                <button class="button primary" id="saveBranding">Применить брендирование</button>
+              </section>
+              <section class="panel brand-preview">
+                <span class="eyebrow">Предпросмотр</span>
+                <h2 id="brandPreviewName">CircuPass</h2>
+                <p id="brandPreviewCompany">Ваш бренд</p>
+                <div class="brand-sample"><span>Data verified</span><strong>86%</strong></div>
+                <p id="brandPreviewFooter"></p>
+              </section>
+              <section class="panel section full-span">
+                <h2>Коммерческие сценарии</h2>
+                <div class="commercial-grid">
+                  <article><b>Подготовка DPP для производителя</b><p>Сбор данных, карта пробелов, публичная карточка и пакет экспорта.</p></article>
+                  <article><b>White-label для консультанта</b><p>Сервис под брендом ESG, compliance или supply-chain агентства.</p></article>
+                  <article><b>Поставщицкий портал</b><p>Следующий этап — кабинет поставщиков с запросами документов.</p></article>
+                  <article><b>QR-паспорта для бренда</b><p>Маркетинговая прозрачность, инструкции по ремонту и подтверждение происхождения.</p></article>
+                </div>
+              </section>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+    <footer class="page-footer">
+      <span>CircuPass 1.0 · local-first DPP workspace</span>
+      <span>Readiness-инструмент, не юридическая сертификация</span>
+    </footer>
+  </div>
+
   <script src="./app.js" defer></script>
 </body>
 </html>
