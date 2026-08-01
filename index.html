@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1118">
+<meta name="description" content="SiteGuard 152 — документы и чек-лист персональных данных для сайтов РФ">
+<title>SiteGuard 152 — документы для сайта</title>
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#"><img src="./favicon.svg" alt=""><b id="brandName">SiteGuard 152</b><em>PRIVACY KIT</em></a>
+  <div class="actions"><button class="btn ghost" id="demoBtn">Демо</button><button class="btn ghost" id="exportBtn">Экспорт</button><button class="btn primary" id="saveBtn">Сохранить</button></div>
+</header>
+<section class="hero">
+  <div><span class="eyebrow">Документы и чек-лист для сайтов РФ</span><h1>Пакет по персональным данным — без хаоса.</h1><p>Заполните анкету сайта. Сервис сформирует документы, чекбоксы, cookie-баннер и список исправлений.</p><div class="chips"><span>Политика ПД</span><span>Согласия</span><span>Cookie</span><span>HTML-код</span><span>White label</span></div></div>
+  <aside class="hero-score"><span>Готовность проекта</span><strong id="heroScore">0%</strong><small id="heroText">Заполните анкету</small><div class="progress"><i id="heroBar"></i></div></aside>
+</section>
+<main class="layout">
+  <aside class="sidebar panel">
+    <div class="panel-head"><h2>Проекты</h2><button class="icon-btn" id="newBtn">+</button></div>
+    <div id="projectList" class="projects"></div>
+    <div class="stack"><button class="btn ghost" id="cloneBtn">Дублировать</button><button class="btn danger" id="deleteBtn">Удалить</button></div>
+  </aside>
+  <section class="content">
+    <nav class="tabs">
+      <button class="tab active" data-tab="profile">Оператор</button>
+      <button class="tab" data-tab="site">Сайт и данные</button>
+      <button class="tab" data-tab="audit">Проверка</button>
+      <button class="tab" data-tab="docs">Документы</button>
+      <button class="tab" data-tab="code">Код для сайта</button>
+      <button class="tab" data-tab="brand">Брендинг</button>
+    </nav>
+
+    <section class="tab-panel active" id="tab-profile">
+      <div class="panel"><div class="panel-head"><div><span class="step">01</span><h2>Данные оператора</h2></div></div>
+      <div class="notice">Шаблоны требуют проверки под фактические процессы и не являются юридическим заключением.</div>
+      <div class="grid two">
+        <label>Название проекта<input id="projectName" value="Новый сайт"></label>
+        <label>Тип оператора<select id="entityType"><option>ИП</option><option>ООО</option><option>Самозанятый</option><option>Физическое лицо</option><option>НКО / учреждение</option></select></label>
+        <label>Полное наименование<input id="operatorName" placeholder="ИП Иванов Иван Иванович"></label>
+        <label>ИНН<input id="inn" placeholder="000000000000"></label>
+        <label>Адрес<input id="operatorAddress" placeholder="Город, улица, дом"></label>
+        <label>Email для обращений<input id="operatorEmail" placeholder="privacy@example.ru"></label>
+        <label>Ответственный за ПД<input id="responsiblePerson" placeholder="ФИО или должность"></label>
+        <label>Домен сайта<input id="domain" placeholder="example.ru"></label>
+        <label>Вид деятельности<input id="businessType" placeholder="Интернет-магазин, салон, услуги"></label>
+        <label>Срок хранения<select id="retention"><option>До достижения цели обработки</option><option>1 год</option><option>3 года</option><option>5 лет</option><option>По договору и законодательству</option></select></label>
+      </div></div>
+    </section>
+
+    <section class="tab-panel" id="tab-site">
+      <div class="panel"><div class="panel-head"><div><span class="step">02</span><h2>Что делает сайт</h2></div><button class="btn ghost" id="presetBtn">Применить профиль</button></div>
+      <label>Тип сайта<select id="siteType"><option value="landing">Лендинг / услуги</option><option value="store">Интернет-магазин</option><option value="education">Образование</option><option value="community">Личный кабинет</option><option value="media">Медиа / блог</option></select></label>
+      <div class="checks">
+        <label><input type="checkbox" id="collectName"><span><b>Имя</b><small>Заявки и заказы</small></span></label>
+        <label><input type="checkbox" id="collectPhone"><span><b>Телефон</b><small>Звонки и мессенджеры</small></span></label>
+        <label><input type="checkbox" id="collectEmail"><span><b>Email</b><small>Ответы и чеки</small></span></label>
+        <label><input type="checkbox" id="collectAddress"><span><b>Адрес</b><small>Доставка</small></span></label>
+        <label><input type="checkbox" id="collectAccount"><span><b>Личный кабинет</b><small>Логин и история</small></span></label>
+        <label><input type="checkbox" id="collectPayment"><span><b>Оплата</b><small>Провайдер и чек</small></span></label>
+        <label><input type="checkbox" id="useAnalytics"><span><b>Аналитика</b><small>Cookies, IP, события</small></span></label>
+        <label><input type="checkbox" id="useCrm"><span><b>CRM</b><small>Передача заявок</small></span></label>
+        <label><input type="checkbox" id="useMessengers"><span><b>Мессенджеры</b><small>Telegram и другие</small></span></label>
+        <label><input type="checkbox" id="useNewsletter"><span><b>Рассылка</b><small>Реклама и акции</small></span></label>
+        <label><input type="checkbox" id="useForeign"><span><b>Иностранные сервисы</b><small>CRM, аналитика, хостинг</small></span></label>
+        <label><input type="checkbox" id="hasChildren"><span><b>Несовершеннолетние</b><small>Образование и кружки</small></span></label>
+        <label><input type="checkbox" id="hasSensitive"><span><b>Спецкатегории</b><small>Здоровье и другое</small></span></label>
+        <label><input type="checkbox" id="hasBiometric"><span><b>Биометрия</b><small>Идентификация по фото/голосу</small></span></label>
+      </div>
+      <label>Подрядчики и получатели<textarea id="processors" rows="4" placeholder="Хостинг, CRM, рассылки, платёжный провайдер"></textarea></label>
+      <label>Цели обработки<textarea id="purposes" rows="4" placeholder="Обработка заявок, договор, обратная связь, аналитика"></textarea></label>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-audit">
+      <div class="audit-grid">
+        <div class="panel score-card"><div class="score-ring" id="scoreRing"><div><strong id="scoreValue">0</strong><span>из 100</span></div></div><h2 id="scoreTitle">Проверка не завершена</h2><p id="scoreDescription"></p><div class="mini"><div><span>Критичных</span><b id="criticalCount">0</b></div><div><span>Важных</span><b id="warningCount">0</b></div><div><span>Готовых</span><b id="okCount">0</b></div></div></div>
+        <div class="panel"><div class="panel-head"><div><span class="step">03</span><h2>План действий</h2></div><button class="btn ghost" id="csvBtn">CSV</button></div><div id="issueList" class="issues"></div></div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-docs">
+      <div class="panel"><div class="panel-head"><div><span class="step">04</span><h2>Сформированные документы</h2></div></div>
+      <div class="doc-grid"><div class="doc-tabs"><button class="doc-btn active" data-doc="policy">Политика ПД</button><button class="doc-btn" data-doc="consent">Согласие</button><button class="doc-btn" data-doc="cookies">Cookie-политика</button><button class="doc-btn" data-doc="marketing">Рассылка</button><button class="doc-btn" data-doc="request">Запрос субъекта</button></div><div><div class="doc-toolbar"><b id="docTitle">Политика обработки ПД</b><div><button class="btn ghost" id="copyDocBtn">Копировать</button><button class="btn ghost" id="txtBtn">TXT</button><button class="btn primary" id="printBtn">PDF</button></div></div><textarea id="docOutput" class="document"></textarea></div></div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-code">
+      <div class="code-grid">
+        <article class="panel"><div class="panel-head"><h2>Чекбокс формы</h2><button class="btn ghost copy-code" data-target="formCode">Копировать</button></div><textarea id="formCode" readonly></textarea></article>
+        <article class="panel"><div class="panel-head"><h2>Согласие на рассылку</h2><button class="btn ghost copy-code" data-target="marketingCode">Копировать</button></div><textarea id="marketingCode" readonly></textarea></article>
+        <article class="panel"><div class="panel-head"><h2>Cookie-баннер</h2><button class="btn ghost copy-code" data-target="cookieCode">Копировать</button></div><textarea id="cookieCode" readonly></textarea></article>
+        <article class="panel"><div class="panel-head"><h2>Ссылки в подвале</h2><button class="btn ghost copy-code" data-target="footerCode">Копировать</button></div><textarea id="footerCode" readonly></textarea></article>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-brand">
+      <div class="grid two"><div class="panel"><div class="panel-head"><div><span class="step">W</span><h2>White label</h2></div></div><label>Название продукта<input id="whiteLabelName" value="SiteGuard 152"></label><label>Студия / консультант<input id="agencyName" placeholder="Ваша веб-студия"></label><label>Контакт<input id="agencyContact" placeholder="@username или email"></label><label>Акцент<input id="accentColor" type="color" value="#86ffb3"></label><button class="btn primary" id="brandBtn">Применить</button></div><div class="panel"><span class="eyebrow">Коммерческий сценарий</span><h2>Дополнительная услуга к каждому сайту</h2><div class="offer"><b>Экспресс-пакет</b><p>Документы, чекбоксы, cookie-баннер и список исправлений.</p></div><div class="offer"><b>White-label для студии</b><p>Повторная продажа под собственным брендом.</p></div><div class="offer"><b>Аудит и внедрение</b><p>Правки форм, аналитики, CRM и подрядчиков.</p></div></div></div>
+    </section>
+  </section>
+</main>
+<footer><span id="footerBrand">SiteGuard 152 · local-first</span><span>Шаблоны требуют адаптации и не гарантируют соответствие.</span></footer>
+<div class="toast" id="toast"></div>
+<script src="./app.js"></script>
+</body>
+</html>
