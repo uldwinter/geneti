@@ -1,0 +1,77 @@
+columns:1fr}.public-header,.public-grid{grid-template-columns:1fr;display:grid}.public-score{text-align:left}.public-mode{padding:0}.public-container{border-radius:0}.public-header h1{font-size:34px}.page-footer{flex-direction:column;text-align:center}}@media print{@page{size:A4;margin:12mm}.topbar,.hero,.sidebar,.tabs,.page-footer,.publish-actions,.toast,.no-print{display:none!important}body{background:#fff}.workspace{display:block;max-width:none;padding:0}.content>.overview,.tab-panel{display:none!important}#tab-passport{display:block!important}.passport-layout{display:block}.passport-layout>.section{display:none}.passport-preview{border:0;min-height:auto;box-shadow:none}.public-mode{padding:0}.public-back{display:none}.public-container{box-shadow:none;border-radius:0}}
+
+</style>
+</head>
+<body>
+  <div id="publicMode" class="public-mode hidden"></div>
+
+  <div id="appShell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="CircuPass">
+        <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%228%22%20y1%3D%225%22%20x2%3D%2258%22%20y2%3D%2260%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20stop-color%3D%22%239cffba%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2343d985%22/%3E%3C/linearGradient%3E%3C/defs%3E%0A%20%20%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2217%22%20fill%3D%22%230c1117%22/%3E%0A%20%20%3Cpath%20d%3D%22M18%2017h22c4%200%207%203%207%207v22H25c-4%200-7-3-7-7V17Z%22%20fill%3D%22none%22%20stroke%3D%22url%28%23g%29%22%20stroke-width%3D%224%22/%3E%0A%20%20%3Cpath%20d%3D%22M25%2027h15M25%2035h10%22%20stroke%3D%22url%28%23g%29%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%0A%20%20%3Cpath%20d%3D%22M43%2043l5%205%209-11%22%20fill%3D%22none%22%20stroke%3D%22%23eaffef%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%0A%3C/svg%3E%0A" alt="" />
+        <span>CircuPass</span>
+        <em>DPP READY</em>
+      </a>
+      <nav class="top-actions">
+        <button class="button ghost" id="loadDemo">Загрузить демо</button>
+        <button class="button ghost" id="exportPackage">Экспорт пакета</button>
+        <button class="button primary" id="publishPassport">Публичный паспорт</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <span class="eyebrow">Digital Product Passport Workspace</span>
+          <h1>Подготовьте продукт<br />к прозрачному рынку ЕС.</h1>
+          <p>Соберите идентичность товара, материалы, поставщиков, документы и данные жизненного цикла. CircuPass покажет пробелы, сформирует публичный паспорт и QR-код.</p>
+          <div class="chips">
+            <span>Модель / партия / единица</span>
+            <span>Data quality score</span>
+            <span>QR + public page</span>
+            <span>JSON / CSV / PDF</span>
+            <span>White label</span>
+          </div>
+        </div>
+        <aside class="hero-card">
+          <span>Готовность выбранного паспорта</span>
+          <strong id="heroScore">0%</strong>
+          <small id="heroVerdict">Добавьте продукт или загрузите демо</small>
+        </aside>
+      </section>
+
+      <section class="workspace">
+        <aside class="sidebar panel">
+          <div class="sidebar-head">
+            <div><span class="step">01</span><h2>Реестр продуктов</h2></div>
+            <button class="icon-button" id="newProduct" title="Новый продукт">+</button>
+          </div>
+          <label class="search-field"><span>Поиск</span><input id="productSearch" placeholder="Название, SKU, бренд" /></label>
+          <div class="filter-row">
+            <select id="categoryFilter" aria-label="Категория">
+              <option value="all">Все категории</option>
+              <option value="battery">Батареи</option>
+              <option value="textile">Текстиль</option>
+              <option value="construction">Стройматериалы</option>
+              <option value="electronics">Электроника</option>
+              <option value="other">Другое</option>
+            </select>
+          </div>
+          <div id="productList" class="product-list"></div>
+          <div class="sidebar-footer">
+            <button class="button ghost wide" id="duplicateProduct">Дублировать</button>
+            <button class="button danger wide" id="deleteProduct">Удалить</button>
+          </div>
+        </aside>
+
+        <section class="content">
+          <div class="overview panel">
+            <div class="overview-main">
+              <div class="overview-title">
+                <span id="activeCategory" class="eyebrow">Нет продукта</span>
+                <h2 id="activeName">Создайте первый паспорт</h2>
+                <p id="activeIdentifier">—</p>
+              </div>
+              <div id="statusBadge" class="status-badge status-draft">Черновик</div>
+            </div>
+            <div class="metrics-grid"

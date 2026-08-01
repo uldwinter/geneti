@@ -1,0 +1,60 @@
+>
+              <article><span>Полнота данных</span><strong id="completenessValue">0%</strong><div class="progress"><i id="completenessBar"></i></div></article>
+              <article><span>Подтверждено</span><strong id="evidenceValue">0%</strong><div class="progress"><i id="evidenceBar"></i></div></article>
+              <article><span>Материалов</span><strong id="materialsCount">0</strong></article>
+              <article><span>Поставщиков</span><strong id="suppliersCount">0</strong></article>
+              <article><span>Документов</span><strong id="documentsCount">0</strong></article>
+            </div>
+          </div>
+
+          <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="identity">Идентичность</button>
+            <button class="tab" data-tab="materials">Материалы</button>
+            <button class="tab" data-tab="supply">Поставщики</button>
+            <button class="tab" data-tab="lifecycle">Жизненный цикл</button>
+            <button class="tab" data-tab="documents">Документы</button>
+            <button class="tab" data-tab="readiness">Готовность</button>
+            <button class="tab" data-tab="passport">Публичная карточка</button>
+            <button class="tab" data-tab="settings">Брендинг</button>
+          </div>
+
+          <section id="tab-identity" class="tab-panel active">
+            <div class="panel section">
+              <div class="panel-head"><div><span class="step">02</span><h2>Идентичность продукта</h2></div><span class="autosave">Автосохранение</span></div>
+              <div class="form-grid three">
+                <label>Название продукта<input id="name" data-field="name" /></label>
+                <label>Бренд<input id="brand" data-field="brand" /></label>
+                <label>Модель / артикул<input id="model" data-field="model" /></label>
+                <label>Уникальный идентификатор<input id="identifier" data-field="identifier" placeholder="GTIN / SKU / UUID" /></label>
+                <label>Уровень паспорта<select id="passportLevel" data-field="passportLevel"><option value="model">Модель</option><option value="batch">Партия</option><option value="item">Единица</option></select></label>
+                <label>Категория<select id="category" data-field="category"><option value="battery">Батареи</option><option value="textile">Текстиль</option><option value="construction">Стройматериалы</option><option value="electronics">Электроника</option><option value="other">Другое</option></select></label>
+                <label>Статус<select id="status" data-field="status"><option value="draft">Черновик</option><option value="review">На проверке</option><option value="ready">Готов к публикации</option><option value="published">Опубликован</option></select></label>
+                <label>Дата выпуска<input id="manufactureDate" data-field="manufactureDate" type="date" /></label>
+                <label>Страна производства<input id="manufactureCountry" data-field="manufactureCountry" /></label>
+                <label>Производитель<input id="manufacturer" data-field="manufacturer" /></label>
+                <label>Импортёр / оператор ЕС<input id="economicOperator" data-field="economicOperator" /></label>
+                <label>Контакт оператора<input id="operatorContact" data-field="operatorContact" /></label>
+              </div>
+              <label>Описание продукта<textarea id="description" data-field="description" rows="4"></textarea></label>
+              <label>Назначение и область применения<textarea id="intendedUse" data-field="intendedUse" rows="3"></textarea></label>
+            </div>
+          </section>
+
+          <section id="tab-materials" class="tab-panel">
+            <div class="panel section">
+              <div class="panel-head"><div><span class="step">03</span><h2>Состав и материалы</h2></div><button class="text-button" id="addMaterial">+ Добавить материал</button></div>
+              <div class="table-head material-grid"><span>Материал</span><span>Доля, %</span><span>Переработанное, %</span><span>Происхождение</span><span>Риск</span><span></span></div>
+              <div id="materialsList" class="dynamic-list"></div>
+              <div class="section-note">Сумма долей: <strong id="materialTotal">0%</strong>. Для публичного паспорта рекомендуется объяснять неизвестные и приблизительные значения.</div>
+            </div>
+          </section>
+
+          <section id="tab-supply" class="tab-panel">
+            <div class="panel section">
+              <div class="panel-head"><div><span class="step">04</span><h2>Цепочка поставок</h2></div><button class="text-button" id="addSupplier">+ Добавить поставщика</button></div>
+              <div class="table-head supplier-grid"><span>Компания</span><span>Страна</span><span>Уровень</span><span>Компонент</span><span>Доказательства</span><span></span></div>
+              <div id="suppliersList" class="dynamic-list"></div>
+            </div>
+          </section>
+
+          <section id="tab-l

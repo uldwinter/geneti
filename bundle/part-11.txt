@@ -1,0 +1,29 @@
+`).join('')||'<div class="empty">Добавьте первый документ</div>';
+  bindDynamic('documents');
+}
+function bindDynamic(collection){
+  const p=active();if(!p)return;
+  const container=$(collection==='materials'?'materialsList':collection==='suppliers'?'suppliersList':'documentsList');
+  qsa('.dynamic-row',container).forEach(row=>{
+    const item=p[collection].find(x=>x.id===row.dataset.row);
+    qsa('[data-key]',row).forEach(input=>input.oninput=()=>{let value=input.value;if(input.type==='number')value=value===''?'':Number(value);if(input.dataset.key==='verified')value=value==='true';item[input.dataset.key]=value;touch(p);renderMetrics(p);renderReadiness(p);renderPassportPreview(p);if(collection==='materials')$('materialTotal').textContent=`${Math.round(p.materials.reduce((a,m)=>a+(Number(m.share)||0),0)*10)/10}%`;});
+    row.querySelector('.remove-row').onclick=()=>{p[collection]=p[collection].filter(x=>x.id!==item.id);touch(p);renderActive();};
+  });
+}
+
+function renderReadiness(p){
+  const s=scoreProduct(p);$('issuesList').innerHTML=p?s.issues.map(i=>`<article class="issue ${i.severity}"><div class="issue-head"><h3>${escapeHtml(i.title)}</h3><span class="issue-badge">${i.severity==='critical'?'Критично':i.severity==='warning'?'Важно':i.severity==='ok'?'Готово':'Улучшение'}</span></div><p>${escapeHtml(i.fix)}</p></article>`).join(''):'<div class="empty">Нет выбранного продукта</div>';
+  const meta=categoryMeta[p?.category]||categoryMeta.other;$('timelineTitle').textContent=meta.timelineTitle;$('timelineText').textContent=meta.timelineText;$('timeline').innerHTML=meta.events.map(([d,t])=>`<div class="timeline-item"><i class="timeline-dot"></i><div><b>${escapeHtml(d)}</b><span>${escapeHtml(t)}</span></div></div>`).join('');
+}
+
+function publicPayload(p){
+  const v=p.publicVisibility||{},s=scoreProduct(p);
+  return{v:2,g:new Date().toISOString(),b:{w:branding.workspaceName,c:branding.companyName,k:branding.companyContact,f:branding.footerText,a:branding.accentColor},p:{n:p.name,b:p.brand,m:p.model,i:p.identifier,l:p.passportLevel,c:p.category,md:p.manufactureDate,mc:p.manufactureCountry,mf:p.manufacturer,eo:p.economicOperator,oc:p.operatorContact,ds:p.description,u:p.intendedUse,t:p.publicTitle||p.name,msg:p.publicMessage,st:p.status,s:{t:s.total,e:s.evidence,c:s.completeness},ma:v.materials?p.materials.map(x=>({n:x.name,s:x.share,r:x.recycled,o:x.origin,k:x.risk})):[],su:v.suppliers?p.suppliers.map(x=>({c:x.company,o:x.country,t:x.tier,p:x.component,e:x.evidence})):[],do:v.documents?p.documents.filter(d=>d.verified).map(x=>({n:x.name,t:x.type,r:x.reference,d:x.date,v:true})):[],en:v.environment?{c:p.carbonFootprint,e:p.energyUse,w:p.waterUse,wm:p.warrantyMonths,ly:p.expectedLifeYears,rc:p.recyclablePct,ru:p.reusablePct,rs:p.repairScore,sp:p.sparePartsYears}:null,rp:v.repair?{a:p.repairInstructions,b:p.recyclingInstructions,c:p.takeBackProgram}:null}};
+}
+function encodePayload(payload){const bytes=new TextEncoder().encode(JSON.stringify(payload));let binary='';bytes.forEach(b=>binary+=String.fromCharCode(b));return btoa(binary).replaceAll('+','-').replaceAll('/','_').replace(/=+$/,'');}
+function decodePayload(str){const norm=str.replaceAll('-','+').replaceAll('_','/');const padded=norm+'='.repeat((4-norm.length%4)%4);const bin=atob(padded);const data=JSON.parse(new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0))));if(data?.v!==2)return data;const b=data.b||{},p=data.p||{};return{version:2,generatedAt:data.g,branding:{workspaceName:b.w,companyName:b.c,companyContact:b.k,footerText:b.f,accentColor:b.a},product:{name:p.n,brand:p.b,model:p.m,identifier:p.i,passportLevel:p.l,category:p.c,manufactureDate:p.md,manufactureCountry:p.mc,manufacturer:p.mf,economicOperator:p.eo,operatorContact:p.oc,description:p.ds,intendedUse:p.u,publicTitle:p.t,publicMessage:p.msg,status:p.st,score:{total:p.s?.t||0,evidence:p.s?.e||0,completeness:p.s?.c||0},materials:(p.ma||[]).map(x=>({name:x.n,share:x.s,recycled:x.r,origin:x.o,risk:x.k})),suppliers:(p.su||[]).map(x=>({company:x.c,country:x.o,tier:x.t,component:x.p,evidence:x.e})),documents:(p.do||[]).map(x=>({name:x.n,type:x.t,reference:x.r,date:x.d,verified:x.v})),environment:p.en?{carbonFootprint:p.en.c,energyUse:p.en.e,waterUse:p.en.w,warrantyMonths:p.en.wm,expectedLifeYears:p.en.ly,recyclablePct:p.en.rc,reusablePct:p.en.ru,repairScore:p.en.rs,sparePartsYears:p.en.sp}:null,repair:p.rp?{repairInstructions:p.rp.a,recyclingInstructions:p.rp.b,takeBackProgram:p.rp.c}:null}};}
+function publicUrl(p){const url=new URL(location.href);url.hash=`passport=${encodePayload(publicPayload(p))}`;return url.toString();}
+
+function renderPassportPreview(p){
+  if(!p){$('passportPreview').innerHTML='<div class="empty">Нет выбранного продукта</div>';$('qrImage').removeAttribute('src');return;}
+  const score=scoreProduct(p);const mats=(p.materials||[]).slice(0,6);$('passportPreview').innerHTML=`<div class="passport-card-head"><div><span class="eyebrow">${escapeHtml(p.publicTitle||'Digital Produ

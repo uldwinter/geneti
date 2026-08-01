@@ -1,0 +1,19 @@
+eturn;p.documents.push({id:uid(),name:'Новый документ',type:'Other',reference:'',date:today(),verified:false});touch(p);renderDocuments(p);renderMetrics(p);renderReadiness(p);};
+$('saveBranding').onclick=()=>{branding={workspaceName:clean($('workspaceName').value)||'CircuPass',companyName:clean($('companyName').value),companyContact:clean($('companyContact').value),accentColor:$('accentColor').value,footerText:clean($('footerText').value)};saveBrandingState();applyBranding();renderPassportPreview(active());toast('Брендинг применён');};
+$('copyPublicLink').onclick=async()=>{const p=active();if(!p)return;await copyText(publicUrl(p));toast('Публичная ссылка скопирована');};
+$('openPublicLink').onclick=()=>{const p=active();if(!p)return;window.open(publicUrl(p),'_blank','noopener');};
+$('publishPassport').onclick=()=>{const p=active();if(!p){toast('Сначала создайте продукт');return;}qsa('.tab').find(x=>x.dataset.tab==='passport').click();setTimeout(()=>document.querySelector('#tab-passport').scrollIntoView({behavior:'smooth'}),50);};
+$('printPassport').onclick=()=>window.print();
+$('exportPackage').onclick=()=>{const p=active();if(!p)return;const pack={exportedAt:new Date().toISOString(),workspace:branding,product:p,readiness:scoreProduct(p),publicPassport:publicPayload(p)};download(`${slug(p.name)}-dpp-package.json`,JSON.stringify(pack,null,2));toast('Пакет данных экспортирован');};
+$('exportTasks').onclick=()=>{const p=active();if(!p)return;const rows=[['Severity','Task','Action'],...scoreProduct(p).issues.map(i=>[i.severity,i.title,i.fix])];download(`${slug(p.name)}-dpp-tasks.csv`,rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\n'),'text/csv;charset=utf-8');};
+function slug(v){return clean(v).toLowerCase().replace(/[^a-zа-я0-9]+/gi,'-').replace(/^-|-$/g,'')||'circupass';}
+
+(function init(){
+  if(location.hash.startsWith('#passport=')){try{showPublicMode(decodePayload(location.hash.slice(10)));return}catch(e){console.error(e);history.replaceState(null,'',location.pathname+location.search);}}
+  if(!products.length){products=[defaultProduct()];activeId=products[0].id;saveProducts();}
+  render();
+})();
+
+</script>
+</body>
+</html>

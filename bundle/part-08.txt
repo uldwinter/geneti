@@ -1,0 +1,42 @@
+о уже сейчас собирать состав, происхождение критических компонентов, ремонтопригодность, запасные части, энергопотребление и инструкции по переработке.',events:[['Сейчас','Инвентаризация продуктовых и поставщицких данных'],['Следующий этап','Уникальные идентификаторы и публичные карточки'],['После отраслевого акта','Адаптация набора полей под обязательные требования']]},
+  other:{label:'Другое',timelineTitle:'Общий DPP readiness',timelineText:'Точный набор обязательных данных зависит от продуктовой группы. Используйте общий профиль для инвентаризации, оценки пробелов и подготовки структуры данных.',events:[['Сейчас','Сбор идентичности, материалов и доказательств'],['Далее','Мониторинг отраслевых делегированных актов'],['После публикации требований','Настройка обязательных полей и интеграция с реестром']]}
+};
+
+const defaultProduct=()=>({
+  id:uid(),name:'Новый продукт',brand:'',model:'',identifier:`CP-${Date.now().toString().slice(-8)}`,passportLevel:'model',category:'other',status:'draft',manufactureDate:'',manufactureCountry:'',manufacturer:'',economicOperator:'',operatorContact:'',description:'',intendedUse:'',
+  carbonFootprint:'',energyUse:'',waterUse:'',warrantyMonths:'',sparePartsYears:'',repairScore:'',expectedLifeYears:'',recyclablePct:'',reusablePct:'',repairInstructions:'',recyclingInstructions:'',takeBackProgram:'',
+  publicTitle:'',publicMessage:'',publicVisibility:{materials:true,suppliers:true,environment:true,documents:true,repair:true},
+  materials:[],suppliers:[],documents:[],createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()
+});
+
+const demoProduct={
+  id:'demo-battery-pack',name:'VoltEdge Industrial Battery Pack 48',brand:'VoltEdge',model:'VE-BP48-2027',identifier:'09506000123456',passportLevel:'model',category:'battery',status:'review',manufactureDate:'2026-07-18',manufactureCountry:'Poland',manufacturer:'VoltEdge Manufacturing Sp. z o.o.',economicOperator:'VoltEdge Europe B.V.',operatorContact:'compliance@voltedge.example',description:'Модульная литий-железо-фосфатная батарея для промышленного накопления энергии и лёгкого электрического транспорта.',intendedUse:'Стационарные накопители энергии и лёгкие транспортные средства при соблюдении температурных и электрических ограничений производителя.',
+  carbonFootprint:128.4,energyUse:3.1,waterUse:420,warrantyMonths:60,sparePartsYears:8,repairScore:7.8,expectedLifeYears:10,recyclablePct:82,reusablePct:36,repairInstructions:'Корпус, BMS и отдельные модули заменяются авторизованным сервисом. Перед разборкой отключить батарею и проверить остаточное напряжение.',recyclingInstructions:'Не помещать в бытовые отходы. Передать авторизованному оператору батарей. Снять BMS, кабели и корпус по инструкции VE-DIS-04.',takeBackProgram:'Бесплатный возврат использованных модулей через сеть партнёров VoltEdge в ЕС.',publicTitle:'VoltEdge Battery Passport',publicMessage:'Проверяемые данные о происхождении, составе, ремонте и переработке батареи.',publicVisibility:{materials:true,suppliers:true,environment:true,documents:true,repair:true},
+  materials:[
+    {id:uid(),name:'LFP cathode material',share:32,recycled:8,origin:'Finland / China',risk:'medium'},
+    {id:uid(),name:'Graphite anode',share:18,recycled:4,origin:'Mozambique / EU processing',risk:'medium'},
+    {id:uid(),name:'Aluminium',share:21,recycled:64,origin:'European Union',risk:'low'},
+    {id:uid(),name:'Copper',share:12,recycled:27,origin:'Chile / Germany',risk:'medium'},
+    {id:uid(),name:'Electronics and polymers',share:17,recycled:6,origin:'European Union',risk:'low'}
+  ],
+  suppliers:[
+    {id:uid(),company:'NordCell Materials Oy',country:'Finland',tier:'Tier 1',component:'Cathode material',evidence:'verified'},
+    {id:uid(),company:'AluCycle GmbH',country:'Germany',tier:'Tier 1',component:'Recycled aluminium',evidence:'verified'},
+    {id:uid(),company:'GraphCore Processing',country:'Poland',tier:'Tier 2',component:'Anode material',evidence:'requested'}
+  ],
+  documents:[
+    {id:uid(),name:'Carbon footprint study',type:'LCA / footprint',reference:'VE-LCA-2026-07',date:'2026-07-12',verified:true},
+    {id:uid(),name:'EU Declaration of Conformity',type:'Conformity',reference:'VE-DOC-2026-441',date:'2026-07-18',verified:true},
+    {id:uid(),name:'Disassembly manual',type:'Repair / recycling',reference:'VE-DIS-04',date:'2026-06-30',verified:true},
+    {id:uid(),name:'Supplier origin declaration',type:'Supply chain',reference:'Pending GraphCore',date:'',verified:false}
+  ],createdAt:'2026-07-20T10:00:00Z',updatedAt:new Date().toISOString()
+};
+
+let products=loadProducts();
+let activeId=products[0]?.id||null;
+let branding=loadBranding();
+let currentTab='identity';
+
+function loadProducts(){try{const p=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(p)?p:[]}catch{return[]}}
+function saveProducts(){localStorage.setItem(STORAGE_KEY,JSON.stringify(products));}
+function loadBranding(){try{return{workspaceName:'CircuPass',companyName:'CircuPass Studio',company

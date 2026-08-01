@@ -1,0 +1,63 @@
+ifecycle" class="tab-panel">
+            <div class="panel section">
+              <div class="panel-head"><div><span class="step">05</span><h2>Экологические и эксплуатационные данные</h2></div></div>
+              <div class="form-grid three">
+                <label>Углеродный след, кг CO₂e<input id="carbonFootprint" data-field="carbonFootprint" type="number" min="0" step="0.01" /></label>
+                <label>Энергопотребление, кВт·ч<input id="energyUse" data-field="energyUse" type="number" min="0" step="0.01" /></label>
+                <label>Водный след, л<input id="waterUse" data-field="waterUse" type="number" min="0" step="0.01" /></label>
+                <label>Гарантия, месяцев<input id="warrantyMonths" data-field="warrantyMonths" type="number" min="0" /></label>
+                <label>Запчасти доступны, лет<input id="sparePartsYears" data-field="sparePartsYears" type="number" min="0" /></label>
+                <label>Ремонтопригодность, 0–10<input id="repairScore" data-field="repairScore" type="number" min="0" max="10" step="0.1" /></label>
+                <label>Расчётный срок службы, лет<input id="expectedLifeYears" data-field="expectedLifeYears" type="number" min="0" step="0.1" /></label>
+                <label>Перерабатываемая доля, %<input id="recyclablePct" data-field="recyclablePct" type="number" min="0" max="100" /></label>
+                <label>Повторно используемая доля, %<input id="reusablePct" data-field="reusablePct" type="number" min="0" max="100" /></label>
+              </div>
+              <label>Инструкции по ремонту и разборке<textarea id="repairInstructions" data-field="repairInstructions" rows="4"></textarea></label>
+              <label>Инструкции по переработке / утилизации<textarea id="recyclingInstructions" data-field="recyclingInstructions" rows="4"></textarea></label>
+              <label>Программа возврата или обратного сбора<textarea id="takeBackProgram" data-field="takeBackProgram" rows="3"></textarea></label>
+            </div>
+          </section>
+
+          <section id="tab-documents" class="tab-panel">
+            <div class="panel section">
+              <div class="panel-head"><div><span class="step">06</span><h2>Документы и доказательства</h2></div><button class="text-button" id="addDocument">+ Добавить документ</button></div>
+              <div class="table-head document-grid"><span>Документ</span><span>Тип</span><span>Номер / URL</span><span>Дата</span><span>Проверен</span><span></span></div>
+              <div id="documentsList" class="dynamic-list"></div>
+            </div>
+          </section>
+
+          <section id="tab-readiness" class="tab-panel">
+            <div class="readiness-layout">
+              <section class="panel section">
+                <div class="panel-head"><div><span class="step">07</span><h2>Пробелы и приоритеты</h2></div><button class="button ghost compact" id="exportTasks">CSV задач</button></div>
+                <div id="issuesList" class="issues"></div>
+              </section>
+              <aside class="panel section timeline-card">
+                <span class="eyebrow">Отраслевой профиль</span>
+                <h3 id="timelineTitle">Общий DPP readiness</h3>
+                <p id="timelineText"></p>
+                <div class="timeline" id="timeline"></div>
+                <div class="legal-note">Это инструмент подготовки данных. Он не регистрирует паспорт в реестре ЕС и не подтверждает юридическое соответствие конкретному отраслевому акту.</div>
+              </aside>
+            </div>
+          </section>
+
+          <section id="tab-passport" class="tab-panel">
+            <div class="passport-layout">
+              <section class="panel section">
+                <div class="panel-head"><div><span class="step">08</span><h2>Публикация</h2></div></div>
+                <label>Публичный заголовок<input id="publicTitle" data-field="publicTitle" /></label>
+                <label>Краткое сообщение бренда<textarea id="publicMessage" data-field="publicMessage" rows="3"></textarea></label>
+                <div class="visibility-grid">
+                  <label><input type="checkbox" data-public="materials" checked /> Материалы</label>
+                  <label><input type="checkbox" data-public="suppliers" checked /> Поставщики</label>
+                  <label><input type="checkbox" data-public="environment" checked /> Экологические данные</label>
+                  <label><input type="checkbox" data-public="documents" checked /> Документы</label>
+                  <label><input type="checkbox" data-public="repair" checked /> Ремонт и утилизация</label>
+                </div>
+                <div class="publish-actions">
+                  <button class="button primary" id="copyPublicLink">Скопировать ссылку</button>
+                  <button class="button ghost" id="openPublicLink">Открыть карточку</button>
+                  <button class="button ghost" id="printPassport">PDF / печать</button>
+                </div>
+                <p c

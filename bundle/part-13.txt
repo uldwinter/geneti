@@ -1,0 +1,26 @@
+onment.warrantyMonths,'мес.')}</h3></div><div><small>Запчасти</small><h3>${valUnit(p.environment.sparePartsYears,'лет')}</h3></div></div></section>`:''}${p.repair?`<section class="public-section"><h2>Ремонт и конец жизненного цикла</h2><h3>Ремонт</h3><p>${escapeHtml(p.repair.repairInstructions||'—')}</p><h3>Переработка</h3><p>${escapeHtml(p.repair.recyclingInstructions||'—')}</p><h3>Возврат</h3><p>${escapeHtml(p.repair.takeBackProgram||'—')}</p></section>`:''}${docs?`<section class="public-section"><h2>Проверенные документы</h2><table class="public-table"><thead><tr><th>Документ</th><th>Тип</th><th>Ссылка / номер</th><th>Дата</th></tr></thead><tbody>${docs}</tbody></table></section>`:''}</main><footer class="public-footer"><span>${escapeHtml(b.workspaceName||'CircuPass')} · ${escapeHtml(b.companyName||'')}</span><span>${escapeHtml(b.footerText||'')}</span></footer></div>`;
+  $('publicBack').onclick=()=>{history.replaceState(null,'',location.pathname+location.search);location.reload();};
+}
+function valUnit(v,u){return v===''||v==null?'—':`${escapeHtml(v)} ${u}`;}
+
+function applyBranding(){
+  document.documentElement.style.setProperty('--accent',branding.accentColor);const hex=branding.accentColor.replace('#','');const rgb=hex.length===6?[parseInt(hex.slice(0,2),16),parseInt(hex.slice(2,4),16),parseInt(hex.slice(4,6),16)]:[124,247,165];document.documentElement.style.setProperty('--accent-rgb',rgb.join(','));
+  document.querySelector('.brand span').textContent=branding.workspaceName;$('workspaceName').value=branding.workspaceName;$('companyName').value=branding.companyName;$('companyContact').value=branding.companyContact;$('accentColor').value=branding.accentColor;$('footerText').value=branding.footerText;$('brandPreviewName').textContent=branding.workspaceName;$('brandPreviewCompany').textContent=`${branding.companyName} · ${branding.companyContact}`;$('brandPreviewFooter').textContent=branding.footerText;
+}
+
+function levelLabel(v){return v==='batch'?'Партия':v==='item'?'Единица':'Модель'}
+function statusLabel(v){return v==='review'?'На проверке':v==='ready'?'Готов к публикации':v==='published'?'Опубликован':'Черновик'}
+function download(name,content,type='application/json'){const blob=new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+async function copyText(text){try{await navigator.clipboard.writeText(text)}catch{const t=document.createElement('textarea');t.value=text;document.body.append(t);t.select();document.execCommand('copy');t.remove();}}
+
+qsa('.tab').forEach(b=>b.onclick=()=>{currentTab=b.dataset.tab;qsa('.tab').forEach(x=>x.classList.toggle('active',x===b));qsa('.tab-panel').forEach(x=>x.classList.toggle('active',x.id===`tab-${currentTab}`));});
+qsa('[data-field]').forEach(el=>el.oninput=()=>{const p=active();if(!p)return;const key=el.dataset.field;let value=el.value;if(el.type==='number')value=value===''?'':Number(value);p[key]=value;if(key==='category'){$('categoryFilter').value='all';}touch(p);render();});
+qsa('[data-public]').forEach(el=>el.onchange=()=>{const p=active();if(!p)return;p.publicVisibility={...(p.publicVisibility||{}),[el.dataset.public]:el.checked};touch(p);renderPassportPreview(p);});
+$('productSearch').oninput=renderProductList;$('categoryFilter').onchange=renderProductList;
+$('newProduct').onclick=()=>{const p=defaultProduct();products.unshift(p);activeId=p.id;saveProducts();render();toast('Создан новый паспорт');};
+$('duplicateProduct').onclick=()=>{const p=active();if(!p)return;const n=clone(p);n.id=uid();n.name=`${p.name} — копия`;n.identifier=`${p.identifier||'CP'}-COPY`;n.status='draft';n.createdAt=n.updatedAt=new Date().toISOString();n.materials=(n.materials||[]).map(x=>({...x,id:uid()}));n.suppliers=(n.suppliers||[]).map(x=>({...x,id:uid()}));n.documents=(n.documents||[]).map(x=>({...x,id:uid()}));products.unshift(n);activeId=n.id;saveProducts();render();toast('Паспорт продублирован');};
+$('deleteProduct').onclick=()=>{const p=active();if(!p)return;if(!confirm(`Удалить «${p.name}»?`))return;products=products.filter(x=>x.id!==p.id);activeId=products[0]?.id||null;saveProducts();render();};
+$('loadDemo').onclick=()=>{const existing=products.find(x=>x.id===demoProduct.id);if(existing)Object.assign(existing,clone(demoProduct));else products.unshift(clone(demoProduct));activeId=demoProduct.id;saveProducts();render();toast('Демо-паспорт загружен');};
+$('addMaterial').onclick=()=>{const p=active();if(!p)return;p.materials.push({id:uid(),name:'Новый материал',share:0,recycled:0,origin:'',risk:'unknown'});touch(p);renderMaterials(p);renderMetrics(p);renderReadiness(p);};
+$('addSupplier').onclick=()=>{const p=active();if(!p)return;p.suppliers.push({id:uid(),company:'Новый поставщик',country:'',tier:'Tier 1',component:'',evidence:'requested'});touch(p);renderSuppliers(p);renderMetrics(p);renderReadiness(p);};
+$('addDocument').onclick=()=>{const p=active();if(!p)r

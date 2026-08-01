@@ -1,0 +1,50 @@
+Contact:'hello@example.com',accentColor:'#7cf7a5',footerText:'Подготовлено для прозрачного и циркулярного жизненного цикла продукта.',...JSON.parse(localStorage.getItem(BRAND_KEY)||'{}')}}catch{return{workspaceName:'CircuPass',companyName:'CircuPass Studio',companyContact:'hello@example.com',accentColor:'#7cf7a5',footerText:'Подготовлено для прозрачного и циркулярного жизненного цикла продукта.'}}}
+function saveBrandingState(){localStorage.setItem(BRAND_KEY,JSON.stringify(branding));}
+function active(){return products.find(p=>p.id===activeId)||null;}
+function touch(p){p.updatedAt=new Date().toISOString();saveProducts();}
+function toast(message){const t=$('toast');t.textContent=message;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2300)}
+
+function scoreProduct(p){
+  if(!p)return{completeness:0,evidence:0,total:0,issues:[]};
+  const required=[
+    ['name','Название продукта'],['brand','Бренд'],['model','Модель / артикул'],['identifier','Уникальный идентификатор'],['manufacturer','Производитель'],['economicOperator','Экономический оператор'],['operatorContact','Контакт оператора'],['manufactureCountry','Страна производства'],['description','Описание'],['intendedUse','Назначение'],['repairInstructions','Инструкции по ремонту'],['recyclingInstructions','Инструкции по переработке']
+  ];
+  const optional=[['carbonFootprint','Углеродный след'],['warrantyMonths','Гарантия'],['sparePartsYears','Доступность запчастей'],['repairScore','Ремонтопригодность'],['expectedLifeYears','Срок службы'],['recyclablePct','Перерабатываемая доля'],['takeBackProgram','Программа возврата']];
+  let points=0,max=required.length*5+optional.length*3+20;
+  const issues=[];
+  required.forEach(([key,label])=>{if(clean(p[key]))points+=5;else issues.push({severity:'critical',title:`Не заполнено: ${label}`,fix:`Добавьте поле «${label}» и укажите источник данных.`})});
+  optional.forEach(([key,label])=>{if(clean(p[key])!=='' )points+=3;else issues.push({severity:'warning',title:`Нет показателя: ${label}`,fix:'Определите владельца данных и запросите подтверждающий документ.'})});
+  if(p.materials?.length){points+=6;const sum=p.materials.reduce((a,m)=>a+(Number(m.share)||0),0);if(Math.abs(sum-100)<=1)points+=4;else issues.push({severity:'warning',title:`Сумма материалов составляет ${sum}%`,fix:'Уточните состав или объясните неизвестную долю.'});}else issues.push({severity:'critical',title:'Нет состава продукта',fix:'Добавьте материалы и массовые доли.'});
+  if(p.suppliers?.length>=2)points+=5;else issues.push({severity:'warning',title:'Цепочка поставок неполна',fix:'Добавьте ключевых Tier 1/Tier 2 поставщиков и компоненты.'});
+  if(p.documents?.length>=2)points+=5;else issues.push({severity:'warning',title:'Недостаточно доказательств',fix:'Добавьте декларации, LCA, сертификаты и инструкции.'});
+  const verifiedDocs=(p.documents||[]).filter(d=>d.verified).length;
+  const verifiedSuppliers=(p.suppliers||[]).filter(s=>s.evidence==='verified').length;
+  const evidenceDenom=Math.max(1,(p.documents||[]).length+(p.suppliers||[]).length);
+  const evidence=Math.round(((verifiedDocs+verifiedSuppliers)/evidenceDenom)*100);
+  if(evidence<60)issues.push({severity:'warning',title:'Низкая доля проверенных доказательств',fix:'Проверьте документы и происхождение данных у поставщиков.'});
+  if(!p.publicTitle)issues.push({severity:'info',title:'Публичная карточка не оформлена',fix:'Задайте публичный заголовок и сообщение бренда.'});
+  const completeness=Math.min(100,Math.round(points/max*100));
+  const total=Math.round(completeness*.72+evidence*.28);
+  if(total>=85)issues.unshift({severity:'ok',title:'Паспорт имеет сильную основу',fix:'Проведите отраслевую юридическую проверку и подготовьте интеграцию с официальным реестром.'});
+  return{completeness,evidence,total,issues};
+}
+
+function render(){
+  applyBranding();
+  renderProductList();
+  renderActive();
+}
+
+function renderProductList(){
+  const query=clean($('productSearch')?.value).toLowerCase();
+  const filter=$('categoryFilter')?.value||'all';
+  const list=products.filter(p=>(filter==='all'||p.category===filter)&&[p.name,p.brand,p.model,p.identifier].join(' ').toLowerCase().includes(query));
+  $('productList').innerHTML=list.length?list.map(p=>{const s=scoreProduct(p);return`<article class="product-item ${p.id===activeId?'active':''}" data-product="${p.id}"><div class="product-item-top"><strong>${escapeHtml(p.name||'Без названия')}</strong><span class="mini-score">${s.total}%</span></div><small>${escapeHtml(p.brand||categoryMeta[p.category]?.label||'Продукт')} · ${escapeHtml(p.identifier||'без ID')}</small></article>`}).join(''):'<div class="empty">Продукты не найдены</div>';
+  qsa('[data-product]').forEach(el=>el.onclick=()=>{activeId=el.dataset.product;render();});
+}
+
+function renderActive(){
+  const p=active();
+  const controls=qsa('[data-field]');
+  if(!p){
+    $('activeName').textContent='Создайте первый паспорт';$('activeCategory').textContent='Нет продукта

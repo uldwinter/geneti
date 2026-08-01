@@ -1,0 +1,65 @@
+lass="muted">Публичная ссылка содержит выбранные данные внутри URL. Для промышленной версии их следует хранить в базе и регистрировать уникальный идентификатор через официальную инфраструктуру.</p>
+              </section>
+              <aside class="panel passport-preview">
+                <div id="passportPreview"></div>
+                <div class="qr-box"><img id="qrImage" alt="QR-код публичного паспорта" /><small>Сканируйте, чтобы открыть публичную карточку</small></div>
+              </aside>
+            </div>
+          </section>
+
+          <section id="tab-settings" class="tab-panel">
+            <div class="settings-layout">
+              <section class="panel section">
+                <div class="panel-head"><div><span class="step">W</span><h2>White-label настройки</h2></div></div>
+                <label>Название решения<input id="workspaceName" /></label>
+                <label>Название компании<input id="companyName" /></label>
+                <label>Контакт<input id="companyContact" /></label>
+                <label>Акцентный цвет<input id="accentColor" type="color" /></label>
+                <label>Подпись в публичном паспорте<textarea id="footerText" rows="3"></textarea></label>
+                <button class="button primary" id="saveBranding">Применить брендирование</button>
+              </section>
+              <section class="panel brand-preview">
+                <span class="eyebrow">Предпросмотр</span>
+                <h2 id="brandPreviewName">CircuPass</h2>
+                <p id="brandPreviewCompany">Ваш бренд</p>
+                <div class="brand-sample"><span>Data verified</span><strong>86%</strong></div>
+                <p id="brandPreviewFooter"></p>
+              </section>
+              <section class="panel section full-span">
+                <h2>Коммерческие сценарии</h2>
+                <div class="commercial-grid">
+                  <article><b>Подготовка DPP для производителя</b><p>Сбор данных, карта пробелов, публичная карточка и пакет экспорта.</p></article>
+                  <article><b>White-label для консультанта</b><p>Сервис под брендом ESG, compliance или supply-chain агентства.</p></article>
+                  <article><b>Поставщицкий портал</b><p>Следующий этап — кабинет поставщиков с запросами документов.</p></article>
+                  <article><b>QR-паспорта для бренда</b><p>Маркетинговая прозрачность, инструкции по ремонту и подтверждение происхождения.</p></article>
+                </div>
+              </section>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+    <footer class="page-footer">
+      <span>CircuPass 1.0 · local-first DPP workspace</span>
+      <span>Readiness-инструмент, не юридическая сертификация</span>
+    </footer>
+  </div>
+
+  <script>
+const STORAGE_KEY='circupass-products-v1';
+const BRAND_KEY='circupass-brand-v1';
+const $=id=>document.getElementById(id);
+const qsa=(s,r=document)=>[...r.querySelectorAll(s)];
+const uid=()=>crypto?.randomUUID?.()||`cp-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+const clone=v=>JSON.parse(JSON.stringify(v));
+const today=()=>new Date().toISOString().slice(0,10);
+const escapeHtml=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const clean=v=>String(v??'').trim();
+
+const categoryMeta={
+  battery:{label:'Батареи',timelineTitle:'Battery Passport readiness',timelineText:'Для отдельных промышленных, EV и LMT-батарей паспорт становится обязательным с 18 февраля 2027 года. Шаблон помогает заранее собрать идентичность, состав, происхождение, углеродный след и данные жизненного цикла.',events:[['20 июля 2026','Реестр DPP и тестовая среда запущены'],['Q4 2026','Ожидаются дополнительные правила доступа и отраслевые детали'],['18 февраля 2027','Первый обязательный срок для отдельных типов батарей']]},
+  textile:{label:'Текстиль',timelineTitle:'Textile DPP readiness',timelineText:'Для текстиля точный обязательный набор полей будет определён отраслевыми актами. Сейчас критично подготовить состав волокон, происхождение, переработанное содержание, долговечность, ремонт и уход.',events:[['2026','Подготовка данных и стандартизация идентификаторов'],['После отраслевого акта','Минимум 18 месяцев переходного периода'],['Следующий этап','Интеграция с поставщиками и системами прослеживаемости']]},
+  construction:{label:'Стройматериалы',timelineTitle:'Construction DPP readiness',timelineText:'Строительные продукты входят в число следующих направлений DPP. Шаблон концентрируется на составе, декларациях, экологических показателях, документах соответствия и сценариях повторного использования.',events:[['2026','Подготовка стандартов и данных'],['2027','Ожидаемая конкретизация требований для строительных продуктов'],['После отраслевого акта','Переходный период и внедрение']]},
+  electronics:{label:'Электроника',timelineTitle:'Electronics circularity readiness',timelineText:'Для электроники полезн
