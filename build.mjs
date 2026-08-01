@@ -1,11 +1,16 @@
-import { mkdir, rm } from 'node:fs/promises';
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const exec = promisify(execFile);
+import { mkdir, rm, copyFile } from 'node:fs/promises';
 
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
-await exec('unzip', ['-q', '-j', 'siteguard152.zip', '-d', 'dist']);
+
+for (const file of [
+  'index.html',
+  'styles.css',
+  'app.js',
+  'favicon.svg',
+  'manifest.webmanifest'
+]) {
+  await copyFile(file, `dist/${file}`);
+}
 
 console.log('SiteGuard 152 production build ready');
